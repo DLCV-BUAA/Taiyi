@@ -16,14 +16,6 @@ class Visualization:
         1. 获取module_name
         2. 获取module_name 对应的 quantity
         2. 获取结果值 module:quantity:epoch
-        :param ext:
-        {
-            'quantity':chart
-            'ext_data':
-            {
-                'loss':
-            }
-        }
         :return:
         """
         logs = defaultdict(dict)
@@ -45,8 +37,7 @@ class Visualization:
         if ext is not None:
             logs.update(ext['ext_data'])
         self.vis.log(logs)
-        if step % self.clean_step == 0:
-            self.monitor
+
     
     def log_ext(self, ext=None):
         self.vis.log(ext)
