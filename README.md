@@ -88,24 +88,24 @@ monitor.get_output() # 可以自己定义save方式，或者在vis.show()方法�
 
 ### 2.1 Single Step Quantity
 
-| Name                | 描述                       | 如何实现                                                     | Extension                     |
-| ------------------- | -------------------------- | ------------------------------------------------------------ | ----------------------------- |
-| InputCovMaxEig      | 输入协方差矩阵的最大特征值 |                                                              | ForwardInputEigOfCovExtension |
-| InputCovStableRank  | 输入协方差矩阵的稳定秩     | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) | ForwardInputEigOfCovExtension |
-| InputCovCondition20 | 输入协方差矩阵的20%条件数  | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) | ForwardInputEigOfCovExtension |
-| InputCovCondition50 | 输入协方差矩阵的50%条件数  | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) | ForwardInputEigOfCovExtension |
-| InputCovCondition80 | 输入协方差矩阵的80%条件数  | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) | ForwardInputEigOfCovExtension |
-| WeightNorm          | 权重二范数                 |                                                              |                               |
-| InputMean           | 输入的均值                 |                                                              | ForwardInputExtension         |
-| OutputGradSndNorm   | 输出梯度二范数             |                                                              | BackwardOutputExtension       |
-| InputSndNorm        | 输出二范数                 |                                                              | ForwardInputExtension         |
+| Name                | 描述                       | 实现                                         | Extension                     | cite                                                         |
+| ------------------- | -------------------------- | -------------------------------------------- | ----------------------------- | ------------------------------------------------------------ |
+| InputCovMaxEig      | 输入协方差矩阵的最大特征值 |                                              | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
+| InputCovStableRank  | 输入协方差矩阵的稳定秩     |                                              | ForwardInputEigOfCovExtension |                                                              |
+| InputCovCondition20 | 输入协方差矩阵的20%条件数  |                                              | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
+| InputCovCondition50 | 输入协方差矩阵的50%条件数  |                                              | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
+| InputCovCondition80 | 输入协方差矩阵的80%条件数  |                                              | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
+| WeightNorm          | 权重二范数                 | 1. data = module.weight<br />2. norm(2)      |                               |                                                              |
+| InputMean           | 输入的每个channel的均值    | 1. data = module.input<br />2. mean          | ForwardInputExtension         |                                                              |
+| OutputGradSndNorm   | 输出梯度二范数             | 1. data = module.output_grad<br />2. norm(2) | BackwardOutputExtension       |                                                              |
+| InputSndNorm        | 输出二范数                 | 1. data = module.input<br />2. norm(2)       | ForwardInputExtension         |                                                              |
 
 ### 2.2 Multi Step Quantity
 
-| Name    | 描述                                  | 如何实现                         | Extension             |
-| ------- | ------------------------------------- | -------------------------------- | --------------------- |
-| MeanTID | BN模块中batch的训练和推理时mean的差异 | https://arxiv.org/abs/2210.05153 | ForwardInputExtension |
-| VarTID  | BN模块中batch的训练和推理时var的差异  | https://arxiv.org/abs/2210.05153 | ForwardInputExtension |
+| Name    | 描述                                  | 实现 | Extension             | cite                             |
+| ------- | ------------------------------------- | ---- | --------------------- | -------------------------------- |
+| MeanTID | BN模块中batch的训练和推理时mean的差异 |      | ForwardInputExtension | https://arxiv.org/abs/2210.05153 |
+| VarTID  | BN模块中batch的训练和推理时var的差异  |      | ForwardInputExtension | https://arxiv.org/abs/2210.05153 |
 
 
 
@@ -117,4 +117,55 @@ monitor.get_output() # 可以自己定义save方式，或者在vis.show()方法�
 
 #### 3.1.1 Forward Extension
 
+| Name                          | 描述                       | 实现                                                 |
+| ----------------------------- | -------------------------- | ---------------------------------------------------- |
+| ForwardInputExtension         | 获取模块的输入             | 1.return input[0]                                    |
+| ForwardOutputExtension        | 获取模块的输出             | 1.return output[0]                                   |
+| ForwardInputEigOfCovExtension | 获取输入协方差矩阵的特征值 | 1.cal_cov_matrix(data)<br />2.retrun cal_eig(matrix) |
+
+
+
 #### 3.1.2 Backward Extension
+
+| Name                            | 描述                               | 实现                                                         |
+| ------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| BackwardInputExtension          | 获取模块输入的梯度                 | 1. return grad_input[0]                                      |
+| BackwardOutputExtension         | 获取模块输出的梯度                 | 1. return grad_output[0]                                     |
+| BackwardOutputEigOfCovExtension | 获取模块输出梯度协方差矩阵的特征值 | 1. cal_cov_matrix(grad_output)<br />2. return cal_eig(matrix) |
+
+
+
+#### 3.1.3 utils
+
+| Function       | 描述                 | 实现                              |
+| -------------- | -------------------- | --------------------------------- |
+| cal_cov_matrix | 计算数据的协方差矩阵 | return torch.cov(data.T)          |
+| cal_eig        | 计算数据的特征值     | return torch.linalg.eigvals(data) |
+
+### 3.2 Visualization
+
+> visualize的作用是将monitor的output提取出来,在wandb中进行展示，主要有三个函数
+>
+> 1. show(step)：将第step个数据提取出来进行展示，可以在这个函数中进行数据的存储
+> 2. log_ext()：等价于wandb.log()
+> 3. close()：wandb.finish()
+>
+> 注：monitor的output的数据组织方式
+>
+> {
+>
+> ​	module_name:{
+>
+> ​		quantity:{
+>
+> ​			step:{
+>
+> ​				data
+>
+> ​			}
+>
+> ​		}
+>
+> ​	}
+>
+> }
