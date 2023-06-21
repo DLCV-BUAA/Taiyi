@@ -102,10 +102,10 @@ monitor.get_output() # 可以自己定义save方式，或者在vis.show()方法�
 
 ### 2.2 Multi Step Quantity
 
-| Name    | 描述                                  | 实现 | Extension             | cite                             |
-| ------- | ------------------------------------- | ---- | --------------------- | -------------------------------- |
-| MeanTID | BN模块中batch的训练和推理时mean的差异 |      | ForwardInputExtension | https://arxiv.org/abs/2210.05153 |
-| VarTID  | BN模块中batch的训练和推理时var的差异  |      | ForwardInputExtension | https://arxiv.org/abs/2210.05153 |
+| Name    | 描述                                  | 实现                                                         | Extension             | cite                             |
+| ------- | ------------------------------------- | ------------------------------------------------------------ | --------------------- | -------------------------------- |
+| MeanTID | BN模块中batch的训练和推理时mean的差异 | 1.data = module.input<br />2.datas = [data.mean]<br />3.diff_data = [d-module.running_mean for d in datas]<br />4. stack diff_data<br />5. diff_data.norm(-1)/(sqrt(running_var).norm(-1))<br />6. mean (思路详见论文公式) | ForwardInputExtension | https://arxiv.org/abs/2210.05153 |
+| VarTID  | BN模块中batch的训练和推理时var的差异  | 1. data = input<br />2. datas = [sqrt(data.var(1))]<br />3. sigma = sqrt(running_var)<br />4. diff_data = [d-sigma for d in datas]<br />5. stack diff_data<br />6. diff_data(-1)/(sigma.norm(-1))<br />7. mean(思路详见论文公式) | ForwardInputExtension | https://arxiv.org/abs/2210.05153 |
 
 
 
