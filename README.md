@@ -90,11 +90,11 @@ monitor.get_output() # 可以自己定义save方式，或者在vis.show()方法�
 
 | Name                | 描述                       | 实现                                         | Extension                     | cite                                                         |
 | ------------------- | -------------------------- | -------------------------------------------- | ----------------------------- | ------------------------------------------------------------ |
-| InputCovMaxEig      | 输入协方差矩阵的最大特征值 |                                              | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
-| InputCovStableRank  | 输入协方差矩阵的稳定秩     |                                              | ForwardInputEigOfCovExtension |                                                              |
-| InputCovCondition20 | 输入协方差矩阵的20%条件数  |                                              | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
-| InputCovCondition50 | 输入协方差矩阵的50%条件数  |                                              | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
-| InputCovCondition80 | 输入协方差矩阵的80%条件数  |                                              | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
+| InputCovMaxEig      | 输入协方差矩阵的最大特征值 |1. data = module.input.cov_matrix_eigs<br />2. Max Eig value | ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
+| InputCovStableRank  | 输入协方差矩阵的稳定秩     |1. data = module.input.cov_matrix_eigs<br />2. Eigs sum /  Max Eig| ForwardInputEigOfCovExtension |                                                              |
+| InputCovCondition20 | 输入协方差矩阵的20%条件数  |1. data = module.input.cov_matrix_eigs<br />2. top20% Eig values| ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
+| InputCovCondition50 | 输入协方差矩阵的50%条件数  |1. data = module.input.cov_matrix_eigs<br />2. top50% Eig values| ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
+| InputCovCondition80 | 输入协方差矩阵的80%条件数  |1. data = module.input.cov_matrix_eigs<br />2. top80%  Eig values| ForwardInputEigOfCovExtension | [https://arxiv.org/pdf/2002.10801.pdf](https://arxiv.org/pdf/2207.12598.pdf) |
 | WeightNorm          | 权重二范数                 | 1. data = module.weight<br />2. norm(2)      |                               |                                                              |
 | InputMean           | 输入的每个channel的均值    | 1. data = module.input<br />2. mean          | ForwardInputExtension         |                                                              |
 | OutputGradSndNorm   | 输出梯度二范数             | 1. data = module.output_grad<br />2. norm(2) | BackwardOutputExtension       |                                                              |
