@@ -2,15 +2,23 @@ import math
 
 from .base_class import SingleStepQuantity
 from ...extensions import ForwardInputEigOfCovExtension
+from ..utils.calculation import *
 import torch
 import pdb
 
 class InputCovStableRank(SingleStepQuantity):
     def _compute(self, global_step):
-        eig_values = self._module.input_eig.real
-        max_eigen_value = max(eig_values)
+        eig_values, step = getattr(self._module, 'eig_values', (None, None))
+        if eig_values is None or step is None or step != global_step:
+            data = self._module.input_eig_data
+            cov = cal_cov_matrix(data)
+            eig_values = cal_eig(cov)
+            eig_values, _ = torch.sort(eig_values, descending=True)
+            setattr(self._module, 'eig_values', (eig_values, global_step))
+        
+        max_eigen_value = eig_values[0]
         assert (max_eigen_value != 0), "max_eigen_value can not be zero"
-        eigs_sum = float(eig_values.sum())
+        eigs_sum = eig_values.sum()
         stable_rank = eigs_sum / max_eigen_value
         return stable_rank
 

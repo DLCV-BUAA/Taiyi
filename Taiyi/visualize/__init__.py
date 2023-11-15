@@ -35,8 +35,10 @@ class Visualization:
                     val = Surface3d(val, key)
                 logs[key] = val
         if ext is not None:
-            logs.update(ext['ext_data'])
+            logs.update(ext)
         self.vis.log(logs)
+        # if step % self.clean_step == 0:
+        #     self.monitor.clean_mem()
 
     
     def log_ext(self, ext=None):

@@ -1,3 +1,10 @@
+'''
+@Description: 
+@Author: jiajunlong
+@Date: 2023-11-13 09:56:52
+@LastEditTime: 2023-11-14 11:10:25
+@LastEditors: jiajunlong
+'''
 from ..extension import Extension
 from ..utils.calculation import cal_cov_matrix, cal_eig
 
@@ -12,15 +19,15 @@ class BackwardOutputEigOfCovExtension(Extension):
 
     def _default(self, module, grad_input, grad_output):
         data = grad_output[0]
-        cov = cal_cov_matrix(data)
-        result = cal_eig(cov)
-        return result
+        # cov = cal_cov_matrix(data)
+        # result = cal_eig(cov)
+        return data
 
     def _Linear(self, module, grad_input, grad_output):
         data = grad_output[0]
-        cov = cal_cov_matrix(data)
-        result = cal_eig(cov)
-        return result
+        # cov = cal_cov_matrix(data)
+        # result = cal_eig(cov)
+        return data
 
     def _Conv2d(self, module, grad_input, grad_output):
         data = grad_output[0]
@@ -28,9 +35,9 @@ class BackwardOutputEigOfCovExtension(Extension):
         assert (c > 1), "channel must > 1"
         # 将输入变为 c* (b*w*h)的形状
         data = data.transpose(0, 1).contiguous().view(-1, c)
-        cov = cal_cov_matrix(data)
-        result = cal_eig(cov)
-        return result
+        # cov = cal_cov_matrix(data)
+        # result = cal_eig(cov)
+        return data
 
 
 if __name__ == '__main__':

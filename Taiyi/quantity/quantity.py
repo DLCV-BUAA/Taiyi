@@ -96,7 +96,7 @@ class Quantity:
         elif isinstance(value, tuple):
             value = tuple(self._apply_save_format(val) for val in value)
 
-        elif isinstance(value, (float, int, numpy.ndarray)):
+        elif isinstance(value, (float, int, numpy.ndarray, numpy.float32)):
             pass
 
         else:

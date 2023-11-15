@@ -13,19 +13,19 @@ class ForwardInputEigOfCovExtension(Extension):
 
     def __init__(self):
         super(ForwardInputEigOfCovExtension, self).__init__()
-        self._name = 'input_eig'
+        self._name = 'input_eig_data'
 
     def _default(self, module, input, output):
         data = input[0]
-        cov = cal_cov_matrix(data)
-        result = cal_eig(cov)
-        return result
+        # cov = cal_cov_matrix(data)
+        # result = cal_eig(cov)
+        return data
 
     def _Linear(self, module, input, output):
         data = input[0]
-        cov = cal_cov_matrix(data)
-        result = cal_eig(cov)
-        return result
+        # cov = cal_cov_matrix(data)
+        # result = cal_eig(cov)
+        return data
 
     def _Conv2d(self, module, input, output):
         data = input[0]
@@ -33,9 +33,9 @@ class ForwardInputEigOfCovExtension(Extension):
         assert (c > 1), "channel must > 1"
         #将输入变为 c* (b*w*h)的形状
         data = data.transpose(0, 1).contiguous().view(-1, c)
-        cov = cal_cov_matrix(data)
-        result = cal_eig(cov)
-        return result
+        # cov = cal_cov_matrix(data)
+        # result = cal_eig(cov)
+        return data
 
 
 if __name__ == '__main__':

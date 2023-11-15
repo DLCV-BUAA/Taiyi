@@ -6,9 +6,12 @@ class InputMean(SingleStepQuantity):
 
     def _compute(self, global_step):
         data = self._module.input
-        data = data.transpose(0, 1).contiguous().view(data.shape[1], -1)
-        # print(data.shape)
-        return data.mean(dim=1)
+        if data.dim() == 3:
+            data = data.transpose(0, 2).contiguous().view(data.shape[2], -1)
+        else:
+            data = data.transpose(0, 1).contiguous().view(data.shape[1], -1)
+        # print(type(data.mean(dim=1)))
+        return data.mean()
 
     def forward_extensions(self):
         extensions = [ForwardInputExtension()]
@@ -38,6 +41,6 @@ if __name__ == '__main__':
 
     print(quantity_l.get_output()[0])
     print(x.shape)
-    print(x.mean(dim=0))
+    print(x.mean())
     print(quantity_c.get_output()[0])
-    print(x_c.mean(dim=(0, 2, 3)))
+    print(x_c.mean())
