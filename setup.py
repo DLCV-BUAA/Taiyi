@@ -37,6 +37,7 @@ setup(
     install_requires=[
         'wandb',
         'plotly',
+        'seaborn',
     ],
     packages=find_packages(),
 )
