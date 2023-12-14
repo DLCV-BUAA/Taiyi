@@ -1,3 +1,10 @@
+'''
+@Description: 
+@Author: jiajunlong
+@Date: 2023-12-08 16:37:41
+@LastEditTime: 2023-12-13 17:05:18
+@LastEditors: jiajunlong
+'''
 import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings
@@ -18,7 +25,7 @@ params = {'axes.titlesize': large,
 
 # print(params)
 plt.rcParams.update(params)
-plt.style.use('seaborn-whitegrid')
+sns.set_theme()
 sns.set_style("white")
 color_cycle = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
                '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',

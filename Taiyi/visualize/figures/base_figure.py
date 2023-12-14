@@ -1,3 +1,10 @@
+'''
+@Description: 
+@Author: jiajunlong
+@Date: 2023-12-08 16:37:41
+@LastEditTime: 2023-12-14 14:11:32
+@LastEditors: jiajunlong
+'''
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -19,25 +26,30 @@ class Figure:
             'name': ['name_a']
         }line plot
     """
-    def __init__(self, data, figsize=(16, 10), dpi=80, default_save_dir='./output/pictrue'):
+    def __init__(self, data, ax=None, default_save_dir='./output/pictrue/sub_picture'):
         self.x_data = data['x']
         self.y_data = data['y']
         self.x_label = data['x_label']
         self.y_label = data['y_label']
         self.legend = data['legend']
         self.title = data['title']
-        self.figsize = figsize
-        self.dpi = dpi
-        self.ax = None
+        self.figsize=(16, 10)
+        self.dpi = 80
+        self.ax = ax
+        if self.ax is None:
+            plt.figure(figsize=(16, 10), dpi=80)
+            self.ax = plt.gca()
         self.default_save_dir = default_save_dir
         
-    def plot(self):
-        self._pre_plot()
-        self._plot()
-        self._finalize_plot() 
+    def plot(self, ax=None):
+        ax = self._get_ax(ax)
+        # self._pre_plot()
+        self._plot(ax)
+        self._finalize_plot(ax) 
     
-    def show(self):
-        plt.show()
+    def show(self, ax=None):
+        ax = self._get_ax(ax)
+        ax.figure.canvas.draw()
     
     def save(self, file_name=None, save_dir=None, save_type='png'):
         dir = save_dir
@@ -49,38 +61,51 @@ class Figure:
         if file_name is None:
             file_name = self.title + '.' + save_type
         file_path = os.path.join(dir, file_name)
-        plt.savefig(file_path)
+        figure = plt.figure(figsize=(16, 10), dpi=80)
+        ax = figure.add_subplot(1, 1, 1)
+        self.plot(ax)
+        figure.savefig(file_path)
+        plt.close()
 
-
-    def _plot(self):
+    def _get_ax(self, ax=None):
+        if ax is None:
+            return self.ax
+        return ax
+    
+    def _plot(self, ax):
         raise NotImplementedError("Subclasses must implement the '_plot' method.")
     
     def _pre_plot(self):
         plt.figure(figsize=self.figsize, dpi=self.dpi)
         self.ax = plt.gca()
     
-    def _finalize_plot(self):
-        self._set_xy()
-        self._set_title()
-        self._remove_borders()
-        self.ax.legend()
+    def _finalize_plot(self, ax=None):
+        self._set_xy(ax)
+        self._set_title(ax)
+        self._remove_borders(ax)
+        ax.legend()
     
-    def _set_title(self):
-        self.ax.set_title(self.title)
+    def _set_title(self, ax=None):
+        ax.set_title(self.title)
     
-    def _set_xy(self): 
+    def _set_xy(self, ax=None): 
         # 设置 X 轴和 Y 轴标签
-        self.ax.set_xlabel(self.x_label)
-        self.ax.set_ylabel(self.y_label)
+        ax.set_xlabel(self.x_label)
+        ax.set_ylabel(self.y_label)
 
     
-    def _remove_borders(self):
+    def _remove_borders(self, ax=None):
 
         # Remove borders
-        self.ax.spines["top"].set_alpha(0.0)
-        self.ax.spines["bottom"].set_alpha(0.3)
-        self.ax.spines["right"].set_alpha(0.0)
-        self.ax.spines["left"].set_alpha(0.3)
+        ax.spines["top"].set_alpha(0.0)
+        ax.spines["bottom"].set_alpha(0.3)
+        ax.spines["right"].set_alpha(0.0)
+        ax.spines["left"].set_alpha(0.3)
+        
+    def unsetlegend(self, ax=None):
+        ax = self._get_ax(ax)
+        ax.legend().set_visible(False)
+        
 
 
     

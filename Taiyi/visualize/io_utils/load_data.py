@@ -2,7 +2,7 @@
 @Description: 
 @Author: jiajunlong
 @Date: 2023-12-08 16:37:41
-@LastEditTime: 2023-12-12 14:31:01
+@LastEditTime: 2023-12-13 11:05:59
 @LastEditors: jiajunlong
 '''
 import os
@@ -74,6 +74,27 @@ class LoadTaskData:
         result['x'] = x_datas
         result['y'] = y_datas
         return result
+    
+    def get_project_name(self):
+        return self.project_filenames
+    
+    def get_quantity_name(self, project_name=None, data_type='monitor'):
+        data = self.data[data_type].copy()
+        quantity_data = {}
+        quantity_name = set()
+        if project_name is not None:
+            quantity_data[project_name] = data.get(project_name, None)
+            if quantity_data[project_name] is None:
+                quantity_data = data
+        else:
+            quantity_data = data
+        for key in quantity_data:
+            project_data = quantity_data[key]
+            for name in project_data.columns:
+                quantity_name.add(name)
+        return quantity_name
+            
+            
         
 
 class LoadProjectData:
